@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using ComparatorApp.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,9 @@ namespace ComparatorApp.API
             // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows#enable-secret-storage
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration["SqliteConnectionStrings"]));
             services.AddControllers();
+            services.AddAutoMapper(typeof(ItemRepository).Assembly);
+
+            services.AddScoped<IItemRepository, ItemRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

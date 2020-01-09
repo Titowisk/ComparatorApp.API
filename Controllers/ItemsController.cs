@@ -1,5 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
 using ComparatorApp.API.Data;
+using ComparatorApp.API.Dtos.ItemsDtos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,10 +12,13 @@ namespace ComparatorApp.API.Controllers
     [ApiController]
     public class ItemsController : ControllerBase
     {
-        private readonly DataContext _context;
-        public ItemsController(DataContext context)
+        private readonly IItemRepository _repo;
+        private readonly IMapper _mapper;
+
+        public ItemsController(IItemRepository repo, IMapper mapper)
         {
-            _context = context;
+            _repo = repo;
+            _mapper = mapper;
         }
 
         // READ
@@ -20,18 +26,10 @@ namespace ComparatorApp.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetItems()
         {
-            var items = await _context.Items.ToListAsync();
+            var items = await _repo.GetItems();
+            var itemsDto = _mapper.Map<List<ItemsForListDto>>(items);
 
-            return Ok(items);
-        }
-
-        // Get comparatorproject/item/3
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetItem(int id)
-        {
-            var item = await _context.Items.FirstOrDefaultAsync(i => i.Id == id);
-
-            return Ok(item);
+            return Ok(itemsDto);
         }
 
         // CREATE
