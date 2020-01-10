@@ -35,8 +35,10 @@ namespace ComparatorApp.API
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration["SqliteConnectionStrings"]));
             services.AddControllers();
             services.AddAutoMapper(typeof(ItemRepository).Assembly);
+            services.AddAutoMapper(typeof(StoreRepository).Assembly);
 
             services.AddScoped<IItemRepository, ItemRepository>();
+            services.AddScoped<IStoreRepository, StoreRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
