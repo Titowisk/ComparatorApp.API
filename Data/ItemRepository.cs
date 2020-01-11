@@ -35,6 +35,12 @@ namespace ComparatorApp.API.Data
             return items;
         }
 
+        public async Task<bool> ItemExists(Item item)
+        {
+            // all items names are saved lower case
+            return await _context.Items.AnyAsync(i => i.Name == item.Name.ToLower());
+        }
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;

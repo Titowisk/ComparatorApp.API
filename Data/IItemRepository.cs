@@ -11,5 +11,7 @@ namespace ComparatorApp.API.Data
         void Delete(Item item);
         Task<bool> SaveAll();
         Task<List<Item>> GetItems();
+
+        Task<bool> ItemExists(Item item);
     }
 }
