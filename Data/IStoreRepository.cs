@@ -10,5 +10,6 @@ namespace ComparatorApp.API.Data
         void Delete(Store store);
         Task<bool> SaveAll();
         Task<List<Store>> GetStores();
+        Task<bool> StoreExists(Store store);
     }
 }

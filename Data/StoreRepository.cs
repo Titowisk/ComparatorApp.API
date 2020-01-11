@@ -34,5 +34,13 @@ namespace ComparatorApp.API.Data
         {
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<bool> StoreExists(Store store)
+        {
+            //TODO
+            // What would indicate that a store already exists??
+            // How to avoid 10 different Stores objects with the same name?
+            return await _context.Stores.AnyAsync(s => s.Id == store.Id);
+        }
     }
 }

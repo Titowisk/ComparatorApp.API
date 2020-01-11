@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using ComparatorApp.API.Data;
 using ComparatorApp.API.Dtos.StoresDtos;
+using ComparatorApp.API.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ComparatorApp.API.Controllers
@@ -27,6 +28,21 @@ namespace ComparatorApp.API.Controllers
             var storesDto = _mapper.Map<List<StoresForListDto>>(stores);
 
             return Ok(storesDto);
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateStore(StoreForCreatingDto storeForCreatingDto)
+        {
+            storeForCreatingDto.Name = storeForCreatingDto.Name.ToLower();
+            var store = new Store { Name = storeForCreatingDto.Name };
+
+            if (await _repo.StoreExists(store))
+                return BadRequest(string.Format("There is already a store with the given information."));
+
+            _repo.Add(store);
+            await _repo.SaveAll();
+
+            return StatusCode(201);
         }
     }
 }
