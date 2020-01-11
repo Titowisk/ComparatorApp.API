@@ -3,3 +3,5 @@ obj/
 bin/
 *.db
 appsettings.json
+*.db-shm
+*.db-wal
