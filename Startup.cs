@@ -36,9 +36,11 @@ namespace ComparatorApp.API
             services.AddControllers();
             services.AddAutoMapper(typeof(ItemRepository).Assembly);
             services.AddAutoMapper(typeof(StoreRepository).Assembly);
+            services.AddAutoMapper(typeof(BrandRepository).Assembly);
 
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
