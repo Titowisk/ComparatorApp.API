@@ -4,6 +4,7 @@ using AutoMapper;
 using ComparatorApp.API.Data;
 using Microsoft.AspNetCore.Mvc;
 using ComparatorApp.API.Dtos.BrandsDtos;
+using ComparatorApp.API.Models;
 
 namespace ComparatorApp.API.Controllers
 {
@@ -29,6 +30,20 @@ namespace ComparatorApp.API.Controllers
             return Ok(brandsDto);
         }
 
+        [HttpPost("create")]
+        public async Task<IActionResult> CreateBrand(BrandForCreationDto brandForCreationDto)
+        {
+            brandForCreationDto.Name = brandForCreationDto.Name.ToLower();
+            var brand = new Brand { Name = brandForCreationDto.Name };
+
+            if (await _repo.BrandExists(brand))
+                return BadRequest(string.Format("There is already a brand with name: {0}", brand.Name.ToLower()));
+
+            _repo.Add(brand);
+            await _repo.SaveAll();
+
+            return StatusCode(201);
+        }
 
     }
 }
