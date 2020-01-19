@@ -33,16 +33,23 @@ namespace ComparatorApp.API
             // using dotnet user-secrets
             // https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets?view=aspnetcore-3.1&tabs=windows#enable-secret-storage
             services.AddDbContext<DataContext>(x => x.UseSqlite(Configuration["SqliteConnectionStrings"]));
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(opt =>
+            {
+                // workaround loop error
+                opt.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            }); // required to use NewtonsoftJson instead of default System.Json
+
             services.AddAutoMapper(typeof(ItemRepository).Assembly);
             services.AddAutoMapper(typeof(StoreRepository).Assembly);
             services.AddAutoMapper(typeof(BrandRepository).Assembly);
             services.AddAutoMapper(typeof(BaseUnitRepository).Assembly);
+            services.AddAutoMapper(typeof(ItemDetailRepository).Assembly);
 
             services.AddScoped<IItemRepository, ItemRepository>();
             services.AddScoped<IStoreRepository, StoreRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IBaseUnitRepository, BaseUnitRepository>();
+            services.AddScoped<IItemDetailRepository, ItemDetailRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
