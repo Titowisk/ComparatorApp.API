@@ -33,8 +33,19 @@ namespace ComparatorApp.API.Controllers
             return Ok(itemsDto);
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetItem(int id)
+        {
+            var item = await _repo.GetItem(id);
+
+            if (item == null)
+                return NotFound("This item doesn't exist.");
+
+            return Ok(item);
+        }
+
         // CREATE
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateItem(ItemForCreatingDto itemForCreatingDto)
         {
             itemForCreatingDto.Name = itemForCreatingDto.Name.ToLower();
@@ -45,13 +56,49 @@ namespace ComparatorApp.API.Controllers
                     string.Format("There is already a item with name: {0}", item.Name.ToLower()));
 
             _repo.Add(item);
-            await _repo.SaveAll(); // TODO: is this really here??
+            await _repo.SaveAll();
 
-            return StatusCode(201);
+            return Ok(item);
         }
 
         // DELETE
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveItem(int id)
+        {
+            // check if id exists
+            if (!await _repo.ItemExists(id))
+                return NotFound("The item was already removed.");
+
+            var item = await _repo.GetItem(id);
+
+            // remove
+            _repo.Delete(item);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("It was not possible to remove the item.");
+        }
 
         // UPDATE
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateItem(int id, ItemForUpdatingDto itemForUpdatingDto)
+        {
+            if (!await _repo.ItemExists(id))
+                return NotFound("This item doesn't exist.");
+
+            if (itemForUpdatingDto == null)
+                return BadRequest("There was no new information to update");
+
+
+            var item = _mapper.Map<Item>(itemForUpdatingDto);
+
+            _repo.Update(item);
+
+            if (await _repo.SaveAll())
+                return Ok(item);
+
+            return BadRequest("It was not possible to update the current item.");
+        }
     }
 }

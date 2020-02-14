@@ -35,15 +35,34 @@ namespace ComparatorApp.API.Data
             return items;
         }
 
+        public async Task<Item> GetItem(int id)
+        {
+            var item = await _context.Items.SingleOrDefaultAsync(i => i.Id == id);
+
+            return item;
+        }
+
         public async Task<bool> ItemExists(Item item)
         {
             // all items names are saved lower case
             return await _context.Items.AnyAsync(i => i.Name == item.Name.ToLower());
         }
 
+        public async Task<bool> ItemExists(int id)
+        {
+            return await _context.Items.AnyAsync(i => i.Id == id);
+        }
+
         public async Task<bool> SaveAll()
         {
             return await _context.SaveChangesAsync() > 0;
+        }
+
+        public Item Update(Item item)
+        {
+            _context.Update(item);
+
+            return item;
         }
     }
 }
