@@ -12,6 +12,8 @@ namespace ComparatorApp.API.Helpers
         public ItemsProfile()
         {
             CreateMap<Item, ItemsForListDto>();
+            CreateMap<Item, ItemForCreatingDto>();
+            CreateMap<ItemForUpdatingDto, Item>();
         }
     }
 }
