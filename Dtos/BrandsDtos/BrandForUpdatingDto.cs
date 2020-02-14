@@ -2,8 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComparatorApp.API.Dtos.BrandsDtos
 {
-    public class BrandForCreationDto
+    public class BrandForUpdatingDto
     {
+        public int Id { get; set; }
         [Required]
         [StringLength(300,
             MinimumLength = 2,

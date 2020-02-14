@@ -21,6 +21,17 @@ namespace ComparatorApp.API.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBrand(int id)
+        {
+            var brand = await _repo.GetBrand(id);
+
+            if (brand == null)
+                return NotFound("This brand doesn't exist.");
+
+            return Ok(brand);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetBrands()
         {
@@ -30,7 +41,7 @@ namespace ComparatorApp.API.Controllers
             return Ok(brandsDto);
         }
 
-        [HttpPost("create")]
+        [HttpPost]
         public async Task<IActionResult> CreateBrand(BrandForCreationDto brandForCreationDto)
         {
             brandForCreationDto.Name = brandForCreationDto.Name.ToLower();
@@ -42,7 +53,43 @@ namespace ComparatorApp.API.Controllers
             _repo.Add(brand);
             await _repo.SaveAll();
 
-            return StatusCode(201);
+            return Ok(brand);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveBrand(int id)
+        {
+            var brand = await _repo.GetBrand(id);
+
+            if (brand == null)
+                return NotFound("This brand doesn't exist.");
+
+            _repo.Delete(brand);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("It was not possible to remove the item.");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateBrand(int id, BrandForUpdatingDto brandForUpdatingDto)
+        {
+            if (!await _repo.BrandExists(id))
+                return NotFound("This brand doesn't exist.");
+
+            if (brandForUpdatingDto == null)
+                return BadRequest("There was no new information to update");
+
+
+            var brand = _mapper.Map<Brand>(brandForUpdatingDto);
+
+            _repo.Update(brand);
+
+            if (await _repo.SaveAll())
+                return Ok(brand);
+
+            return BadRequest("It was not possible to update the current brand.");
         }
 
     }

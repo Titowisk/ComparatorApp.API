@@ -9,6 +9,8 @@ namespace ComparatorApp.API.Helpers
         public BrandsProfile()
         {
             CreateMap<Brand, BrandsForListDto>();
+            CreateMap<Brand, BrandForCreationDto>();
+            CreateMap<BrandForUpdatingDto, Brand>();
         }
     }
 }
