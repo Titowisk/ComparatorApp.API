@@ -5,3 +5,4 @@ bin/
 appsettings.json
 *.db-shm
 *.db-wal
+.vs
