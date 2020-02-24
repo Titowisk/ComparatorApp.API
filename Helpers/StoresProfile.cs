@@ -15,6 +15,8 @@ namespace ComparatorApp.API.Helpers
         public StoresProfile()
         {
             CreateMap<Store, StoresForListDto>();
+            CreateMap<Store, StoreForCreatingDto>();
+            CreateMap<StoreForUpdatingDto, Store>();
         }
     }
 }
