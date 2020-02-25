@@ -24,6 +24,11 @@ namespace ComparatorApp.API.Data
             _context.Remove(itemDetail);
         }
 
+        public void Update(ItemDetail itemDetail)
+        {
+            _context.Update(itemDetail);
+        }
+
         public async Task<List<ItemDetail>> GetItemsDetail()
         {
             // eager
@@ -33,8 +38,16 @@ namespace ComparatorApp.API.Data
             .Include(itemDetail => itemDetail.Brand)
             .Include(itemDetail => itemDetail.BaseUnit)
             .ToListAsync();
+        }
 
-
+        public async Task<ItemDetail> GetItemDetail(int id)
+        {
+            return await _context.ItemsDetail
+            .Include(ide => ide.Item)
+            .Include(ide => ide.Store)
+            .Include(ide => ide.Brand)
+            .Include(ide => ide.BaseUnit)
+            .SingleOrDefaultAsync(ide => ide.Id == id);
         }
 
         public async Task<bool> ItemDetailExists(ItemDetail itemDetail)
@@ -49,18 +62,12 @@ namespace ComparatorApp.API.Data
             return ItemDetailExists;
         }
 
-        // public bool VerifyItemDetailExists(ItemDetail current, ItemDetail created)
-        // {
-        //     if (
-        //         current.Price == created.Price &&
-        //         current.Quantity == created.Quantity &&
-        //         current.ItemId == created.ItemId &&
-        //         current.BrandId == created.BrandId &&
-        //         current.StoreId == created.StoreId)
-        //         return true;
+        public async Task<bool> ItemDetailExists(int id)
+        {
+            bool ItemDetailExists = await _context.ItemsDetail.AnyAsync(i => i.Id == id);
 
-        //     return false;
-        // }
+            return ItemDetailExists;
+        }
 
         public async Task<bool> SaveAll()
         {

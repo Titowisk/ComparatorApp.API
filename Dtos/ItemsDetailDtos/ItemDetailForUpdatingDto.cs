@@ -1,10 +1,10 @@
 using System;
-using ComparatorApp.API.Models;
 
 namespace ComparatorApp.API.Dtos.ItemsDetailDtos
 {
-    public class ItemDetailForCreationDto
+    public class ItemDetailForUpdatingDto
     {
+        public int Id { get; set; }
         public int ItemId { get; set; }
         // public Item Item { get; set; }
         public int BrandId { get; set; }
@@ -15,6 +15,7 @@ namespace ComparatorApp.API.Dtos.ItemsDetailDtos
         public decimal Quantity { get; set; }
         public int BaseUnitId { get; set; }
         // public BaseUnit BaseUnit { get; set; }
-        public DateTime Created { get; set; }
+        // public DateTime Created { get; set; }
+        public DateTime Modified { get; set; }
     }
 }

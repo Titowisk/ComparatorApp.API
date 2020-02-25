@@ -30,7 +30,19 @@ namespace ComparatorApp.API.Controllers
             return Ok(itemsDetailDtos);
         }
 
-        [HttpPost("create")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetItemDetail(int id)
+        {
+            var itemDetail = await _repo.GetItemDetail(id);
+
+            if (itemDetail == null)
+                return NotFound("Item not found");
+
+            var itemDetailDtos = _mapper.Map<ItemDetailForGetDto>(itemDetail);
+            return Ok(itemDetailDtos);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> CreateItemDetail(ItemDetailForCreationDto itemDetailForCreationDto)
         {
             var itemDetail = new ItemDetail
@@ -50,7 +62,48 @@ namespace ComparatorApp.API.Controllers
             _repo.Add(itemDetail);
             await _repo.SaveAll();
 
-            return StatusCode(201);
+            return Ok(itemDetail);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveItemDetail(int id)
+        {
+            // check if id exists
+            if (!await _repo.ItemDetailExists(id))
+                return NotFound("The item detail was already removed or doesn't exist");
+
+            var item = await _repo.GetItemDetail(id);
+
+            // remove
+            _repo.Delete(item);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("It was not possible to remove the item.");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateItem(int id, ItemDetailForUpdatingDto itemForUpdatingDto)
+        {
+            if (!await _repo.ItemDetailExists(id))
+                return NotFound("This item detail doesn't exist.");
+
+            if (itemForUpdatingDto == null)
+                return BadRequest("There was no new information to update");
+
+            var itemDetail = await _repo.GetItemDetail(id);
+
+            itemForUpdatingDto.Id = id;
+            itemForUpdatingDto.Modified = DateTime.Now;
+            itemDetail = _mapper.Map<ItemDetailForUpdatingDto, ItemDetail>(itemForUpdatingDto, itemDetail);
+
+            _repo.Update(itemDetail);
+
+            if (await _repo.SaveAll())
+                return Ok(itemDetail);
+
+            return BadRequest("It was not possible to update the current item detail.");
         }
     }
 }
