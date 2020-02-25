@@ -31,7 +31,18 @@ namespace ComparatorApp.API.Controllers
             return Ok(baseUnitsDto);
         }
 
-        [HttpPost("create")]
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetBaseUnit(int id)
+        {
+            var baseUnit = await _repo.GetBaseUnit(id);
+
+            if (baseUnit == null)
+                return NotFound("This base unit doesn't exist");
+
+            return Ok(baseUnit);
+        }
+
+        [HttpPost]
         public async Task<IActionResult> CreateBaseUnit(BaseUnitForCreationDto baseUnitForCreationDto)
         {
             var baseUnit = new BaseUnit
@@ -48,6 +59,45 @@ namespace ComparatorApp.API.Controllers
             await _repo.SaveAll();
 
             return StatusCode(201);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> RemoveBaseUnit(int id)
+        {
+            // check if id exists
+            if (!await _repo.BaseUnitExists(id))
+                return NotFound("The base unit was already removed or doesn't exist.");
+
+            var baseUnit = await _repo.GetBaseUnit(id);
+
+            // remove
+            _repo.Delete(baseUnit);
+
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            return BadRequest("It was not possible to remove the baseUnit.");
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateItem(int id, BaseUnitForUpdatingDto baseUnitForUpdatingDto)
+        {
+            if (!await _repo.BaseUnitExists(id))
+                return NotFound("This base unit doesn't exist.");
+
+            if (baseUnitForUpdatingDto == null)
+                return BadRequest("There was no new information to update");
+
+            baseUnitForUpdatingDto.Id = id;
+
+            var baseUnit = _mapper.Map<BaseUnit>(baseUnitForUpdatingDto);
+
+            _repo.Update(baseUnit);
+
+            if (await _repo.SaveAll())
+                return Ok(baseUnit);
+
+            return BadRequest("It was not possible to update the current base unit.");
         }
     }
 }

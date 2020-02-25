@@ -19,10 +19,22 @@ namespace ComparatorApp.API.Data
             _context.Add(baseUnit);
         }
 
+        public BaseUnit Update(BaseUnit baseUnit)
+        {
+            _context.Update(baseUnit);
+
+            return baseUnit;
+        }
+
         public async Task<bool> BaseUnitExists(BaseUnit baseUnit)
         {
             return await _context.BaseUnits.AnyAsync(bu =>
             (bu.Name == baseUnit.Name && bu.Symbol == baseUnit.Symbol));
+        }
+
+        public async Task<bool> BaseUnitExists(int id)
+        {
+            return await _context.BaseUnits.AnyAsync(bu => bu.Id == id);
         }
 
         public void Delete(BaseUnit baseUnit)
@@ -35,6 +47,13 @@ namespace ComparatorApp.API.Data
             var baseUnits = await _context.BaseUnits.ToListAsync();
 
             return baseUnits;
+        }
+
+        public async Task<BaseUnit> GetBaseUnit(int id)
+        {
+            var baseUnit = await _context.BaseUnits.SingleOrDefaultAsync(bu => bu.Id == id);
+
+            return baseUnit;
         }
 
         public async Task<bool> SaveAll()

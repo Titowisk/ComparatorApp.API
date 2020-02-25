@@ -9,6 +9,8 @@ namespace ComparatorApp.API.Helpers
         public BaseUnitsProfile()
         {
             CreateMap<BaseUnit, BaseUnitsForListDto>();
+            CreateMap<BaseUnit, BaseUnitForCreationDto>();
+            CreateMap<BaseUnitForUpdatingDto, BaseUnit>();
         }
     }
 }

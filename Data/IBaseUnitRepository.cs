@@ -8,8 +8,11 @@ namespace ComparatorApp.API.Data
     {
         void Add(BaseUnit baseUnit);
         void Delete(BaseUnit baseUnit);
+        BaseUnit Update(BaseUnit baseUnit);
         Task<bool> SaveAll();
         Task<List<BaseUnit>> GetBaseUnits();
+        Task<BaseUnit> GetBaseUnit(int id);
         Task<bool> BaseUnitExists(BaseUnit baseUnit);
+        Task<bool> BaseUnitExists(int id);
     }
 }

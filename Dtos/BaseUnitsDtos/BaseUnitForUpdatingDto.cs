@@ -2,8 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace ComparatorApp.API.Dtos.BaseUnitsDtos
 {
-    public class BaseUnitForCreationDto
+    public class BaseUnitForUpdatingDto
     {
+        public int Id { get; set; }
         [Required]
         [StringLength(300,
             MinimumLength = 2,
