@@ -74,7 +74,7 @@ namespace ComparatorApp.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem(int id, StoreForUpdatingDto storeForUpdatingDto)
+        public async Task<IActionResult> UpdateStore(int id, StoreForUpdatingDto storeForUpdatingDto)
         {
             if (!await _repo.StoreExists(id))
                 return NotFound("This store doesn't exist.");
